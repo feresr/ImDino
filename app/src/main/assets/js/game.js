@@ -491,6 +491,7 @@ Runner.prototype = {
 
     window.addEventListener(Runner.events.FOCUS,
           this.onVisibilityChange.bind(this));
+    Android.onGameStart();
   },
 
   clearCanvas: function() {
@@ -529,6 +530,12 @@ Runner.prototype = {
       } else {
         deltaTime = !this.started ? 0 : deltaTime;
         this.horizon.update(deltaTime, this.currentSpeed, hasObstacles);
+      }
+
+      if (this.horizon.obstacles[0]) {
+        Android.onGameUpdate(this.horizon.obstacles[0].xPos, this.currentSpeed);
+      } else {
+        Android.onGameUpdate(999, this.currentSpeed);
       }
 
       // Check for collisions.
@@ -780,6 +787,7 @@ Runner.prototype = {
 
     // Reset the time clock.
     this.time = getTimeStamp();
+    Android.onGameOver(this.distanceRan);
   },
 
   stop: function() {
@@ -817,6 +825,7 @@ Runner.prototype = {
       this.playSound(this.soundFx.BUTTON_PRESS);
 
       this.update();
+      Android.onGameStart();
     }
   },
 
