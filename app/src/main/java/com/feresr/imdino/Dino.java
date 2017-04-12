@@ -12,19 +12,19 @@ public class Dino {
     private int distanceRan = 0;
     private float[] genome;
 
-    public Dino(float[] genome, int generation) {
+        public Dino(float[] genome, int generation) {
         Random random = new Random();
 
         //tweak child genome to differ from parent a bit
-        for (int i = 0; i < genome.length; i++) {
-            genome[i] *= (1 + (random.nextFloat() * 2 - 1));
-        }
+        //for (int i = 0; i < genome.length; i++) {
+        //    genome[i] *= (1 + (random.nextFloat() * 2 - 1));
+        //}
 
         //mutations?
-        if (random.nextInt(10) >= 6) {
-            int howMany = random.nextInt(4) + 1;
+        if (random.nextInt(10) >= 3) {
+            int howMany = random.nextInt(5) + 1;
             for (int i = 0; i < howMany; i++) { //alter one or two or genomes
-                genome[random.nextInt(genome.length)] = (random.nextFloat() * 2) - 1;
+                genome[random.nextInt(genome.length)] = random.nextFloat() * 2 - 1;
             }
         }
         this.genome = genome;
@@ -43,7 +43,7 @@ public class Dino {
         Random random = new Random();
         genome = new float[9];
         for (int i = 0; i < genome.length; i++) {
-            genome[i] = (random.nextFloat() * 4) - 2;
+            genome[i] = random.nextFloat() * 2 - 1;
         }
         createBrain();
     }
@@ -64,7 +64,7 @@ public class Dino {
 
     public boolean think(float[] input) {
         thinkValue = brain.shouldJump(input);
-        return thinkValue > .8;
+        return thinkValue > .5;
     }
 
     public float getThinkValue(){

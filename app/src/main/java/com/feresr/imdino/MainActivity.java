@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -24,10 +23,11 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private KeyEvent keyEvent;
     private int maxScoreInGeneration = 0;
+    private int minScoreInGeneration = Integer.MAX_VALUE;
     private int generation = 0;
     private int currentDino = 0;
     private Dino bestDino;
-    public static final int DINO_COUNT = 10;
+    public static final int DINO_COUNT = 5;
     private Handler handler;
 
     private ArrayList<Dino> dinosaurs;
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
     @JavascriptInterface
     public void onGameStart() {
-        Log.e("info", "Running dino: " + currentDino + " in generation " + generation);
+        Log.e("info", "Running dino: " + currentDino + " in generation " + generation + " " + Arrays.toString(dinosaurs.get(currentDino).getGenome()));
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -90,11 +90,17 @@ public class MainActivity extends AppCompatActivity {
     @JavascriptInterface
     public void onGameOver(int score) {
         Log.e("info", "Running dino: " + currentDino + " score: " + score);
+
         dinosaurs.get(currentDino).setDistanceRan(score);
         if (score > maxScoreInGeneration) {
             maxScoreInGeneration = score;
             bestDino = dinosaurs.get(currentDino);
         }
+
+        if (score < minScoreInGeneration) {
+            minScoreInGeneration = score;
+        }
+
         if (currentDino < dinosaurs.size() - 1) {
             currentDino++;
             reloadGame();
@@ -105,12 +111,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void reloadGame() {
-        webView.post(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                webView.dispatchTouchEvent(MotionEvent.obtain(100, 100, MotionEvent.ACTION_DOWN, 10, 10, 0));
+                webView.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SPACE));
             }
-        });
+        }, 1000);
     }
 
 
@@ -137,22 +143,25 @@ public class MainActivity extends AppCompatActivity {
     private void killDinos() {
 
         Log.e("info", "GENERATION " + generation + "FINISHED best dino: " + bestDino.getDistanceRan());
-        int killNumber = dinosaurs.size() / 2;
-        ArrayList<Dino> newDinos = new ArrayList<>();
-        for (int i = 0; i < killNumber; i++) { //kill 5 dinosaurs each time
-            Dino saved = saveDino(dinosaurs);
-            dinosaurs.remove(saved);
-            newDinos.add(saved);
+
+        Random r = new Random();
+        ArrayList<Dino> survivers = new ArrayList<>();
+        for (int i = 0; i < DINO_COUNT; i++) {
+            if (r.nextInt(maxScoreInGeneration - minScoreInGeneration) < dinosaurs.get(i).getDistanceRan() - minScoreInGeneration) {
+                survivers.add(dinosaurs.get(i));
+            } else {
+                Log.e("info", "dino killed: " + dinosaurs.get(i).getDistanceRan());
+            }
         }
 
-        for (int i = newDinos.size(); i < DINO_COUNT; i++) {
-            newDinos.add(bestDino.reproduce(generation));
+        for (int i = survivers.size(); i < DINO_COUNT; i++) {
+            survivers.add(bestDino.reproduce(generation));
         }
-
-        dinosaurs = newDinos;
 
         generation++;
         maxScoreInGeneration = 0;
+        minScoreInGeneration = Integer.MAX_VALUE;
+        this.dinosaurs = survivers;
         reloadGame();
     }
 }

@@ -27,7 +27,7 @@ public class Neuron {
             v += weights[i] * inputs[i];
         }
 
-        return (float) (1f / (1f + (Math.pow(Math.E, -v))));
+        return (float) (1f / (1f + (Math.exp(-1.0 * v))));
     }
 
 }
