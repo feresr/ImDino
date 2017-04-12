@@ -6,9 +6,11 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int DINO_COUNT = 5;
     private TextView speedTextView;
     private TextView distanceTextView;
     private TextView resultTextView;
@@ -27,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private int generation = 0;
     private int currentDino = 0;
     private Dino bestDino;
-    public static final int DINO_COUNT = 5;
     private Handler handler;
+    private LinearLayout dinoPlaceholderView;
 
     private ArrayList<Dino> dinosaurs;
 
@@ -53,8 +56,11 @@ public class MainActivity extends AppCompatActivity {
         handler = new Handler();
 
         dinosaurs = new ArrayList<>();
+        LayoutInflater layoutInflater = LayoutInflater.from(this);
+        dinoPlaceholderView = (LinearLayout) findViewById(R.id.dino_placeholder);
         for (int i = 0; i < DINO_COUNT; i++) {
             dinosaurs.add(new Dino());
+            layoutInflater.inflate(R.layout.dino_image, dinoPlaceholderView);
         }
     }
 
@@ -80,6 +86,11 @@ public class MainActivity extends AppCompatActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
+
+                for (int i = 0; i < dinoPlaceholderView.getChildCount(); i++) {
+                    dinoPlaceholderView.getChildAt(i).setAlpha(.2f);
+                }
+                dinoPlaceholderView.getChildAt(currentDino).setAlpha(1);
                 /*generationTextView.setText(String.valueOf(generation));
                 dinoTextView.setText(String.valueOf(currentDino));
                 genomeTextView.setText(Arrays.toString(dinosaurs.get(currentDino).getGenome()));*/
@@ -108,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
             currentDino = 0;
             killDinos();
         }
+
     }
 
     private void reloadGame() {
