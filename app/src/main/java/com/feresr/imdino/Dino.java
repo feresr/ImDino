@@ -7,33 +7,25 @@ import java.util.Random;
  */
 
 public class Dino {
-    private Brain brain;
+    private final static float MUTATION_RATE = .75f;
     private float thinkValue = 0.0f;
-    private int distanceRan = 0;
     private float[] genome;
+    private int distanceRan = 0;
+    private Brain brain;
 
-        public Dino(float[] genome, int generation) {
+    public Dino(float[] genome) {
         Random random = new Random();
 
-        //tweak child genome to differ from parent a bit
-        //for (int i = 0; i < genome.length; i++) {
-        //    genome[i] *= (1 + (random.nextFloat() * 2 - 1));
-        //}
-
-        //mutations?
-        if (random.nextInt(10) >= 3) {
-            int howMany = random.nextInt(5) + 1;
-            for (int i = 0; i < howMany; i++) { //alter one or two or genomes
-                genome[random.nextInt(genome.length)] = random.nextFloat() * 2 - 1;
+        //should mutate some genes or duplicate exactly?
+        if (random.nextFloat() <= MUTATION_RATE) {
+            //mutate at most half of parents genes
+            int howManyGenes = random.nextInt(genome.length / 2) + 1;
+            for (int i = 0; i < howManyGenes; i++) { //alter genomes randomly
+                genome[random.nextInt(genome.length)] = getRandomSynapses(random);
             }
         }
         this.genome = genome;
-
         createBrain();
-    }
-
-    public float[] getGenome() {
-        return genome;
     }
 
     Dino() {
@@ -43,9 +35,17 @@ public class Dino {
         Random random = new Random();
         genome = new float[9];
         for (int i = 0; i < genome.length; i++) {
-            genome[i] = random.nextFloat() * 2 - 1;
+            genome[i] = getRandomSynapses(random);
         }
         createBrain();
+    }
+
+    public float[] getGenome() {
+        return genome;
+    }
+
+    private float getRandomSynapses(Random random) {
+        return random.nextFloat() * 2 - 1;
     }
 
     private void createBrain() {
@@ -67,9 +67,10 @@ public class Dino {
         return thinkValue > .5;
     }
 
-    public float getThinkValue(){
+    public float getThinkValue() {
         return thinkValue;
     }
+
     public int getDistanceRan() {
         return distanceRan;
     }
@@ -78,7 +79,7 @@ public class Dino {
         this.distanceRan = distanceRan;
     }
 
-    public Dino reproduce(int generation) {
-        return new Dino(genome.clone(), generation);
+    public Dino reproduce() {
+        return new Dino(genome.clone());
     }
 }

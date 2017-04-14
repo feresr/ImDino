@@ -17,6 +17,10 @@ public class Neuron {
         this.weights = weights;
     }
 
+    public int getNumberOfSynapses() {
+        return weights.length;
+    }
+
     public float process(float[] inputs) {
         if (inputs.length != weights.length) {
             Log.e("neuron", Arrays.toString(weights) + " " + Arrays.toString(inputs));
@@ -27,7 +31,11 @@ public class Neuron {
             v += weights[i] * inputs[i];
         }
 
-        return (float) (1f / (1f + (Math.exp(-1.0 * v))));
+        //apply sigmoid fucntion
+        return sigmoid(v);
     }
 
+    private float sigmoid(float v) {
+        return (float) (1.0f / (1.0f + (Math.exp(-1.0 * v))));
+    }
 }

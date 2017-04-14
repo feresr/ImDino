@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
     @JavascriptInterface
     public void onGameUpdate(final float obstacleX, final float currentSpeed) {
-
         if (dinosaurs.get(currentDino).think(new float[]{obstacleX, currentSpeed})) {
             webView.dispatchKeyEvent(keyEvent);
         }
@@ -84,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     @JavascriptInterface
     public void onGameStart() {
-        Log.e("info", "Running dino: " + currentDino + " in generation " + generation + " " + Arrays.toString(dinosaurs.get(currentDino).getGenome()));
+        Log.i("onGameStart", "Running dino: " + currentDino + " in generation " + generation + " " + Arrays.toString(dinosaurs.get(currentDino).getGenome()));
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -95,14 +94,14 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 dinoPlaceholderView.getChildAt(currentDino).setAlpha(1.0f);
-                generationTextView.setText("Generation: " + String.valueOf(generation));
+                generationTextView.setText("Generation: " + String.valueOf(generation) + " • Max score in gen: " + maxScoreInGeneration);
             }
         });
     }
 
     @JavascriptInterface
     public void onGameOver(int score) {
-        Log.e("info", "Running dino: " + currentDino + " score: " + score);
+        Log.i("onGameOver", "Running dino: " + currentDino + " score: " + score);
 
         dinosaurs.get(currentDino).setDistanceRan(score);
         if (score > maxScoreInGeneration) {
@@ -118,8 +117,7 @@ public class MainActivity extends AppCompatActivity {
             currentDino++;
             reloadGame();
         } else {
-            currentDino = 0;
-            killDinos();
+            toNextGeneration();
         }
 
     }
@@ -134,29 +132,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private Dino saveDino(ArrayList<Dino> dinosaurs) {
-        int scoreSum = 0;
-        for (Dino dino : dinosaurs) {
-            scoreSum += dino.getDistanceRan();
-        }
-
-        Random random = new Random();
-        int kill = random.nextInt(scoreSum);
-        int score = 0;
-        for (Dino dino : dinosaurs) {
-            score += dino.getDistanceRan();
-            if (kill < score) {
-                Log.e("info", "A dino was saved SCORE: " + dino.getDistanceRan() + " GENOME: " + Arrays.toString(dino.getGenome()));
-                return dino;
-            }
-        }
-
-        return null;
-    }
-
-    private void killDinos() {
-
-        Log.e("info", "GENERATION " + generation + "FINISHED best dino: " + bestDino.getDistanceRan());
+    private void toNextGeneration() {
+        Log.i("toNextGeneration", "GENERATION " + generation + "FINISHED best dino: " + bestDino.getDistanceRan());
 
         Random r = new Random();
         ArrayList<Dino> survivers = new ArrayList<>();
@@ -164,15 +141,16 @@ public class MainActivity extends AppCompatActivity {
             if (r.nextInt(maxScoreInGeneration - minScoreInGeneration) < dinosaurs.get(i).getDistanceRan() - minScoreInGeneration) {
                 survivers.add(dinosaurs.get(i));
             } else {
-                Log.e("info", "dino killed: " + dinosaurs.get(i).getDistanceRan());
+                Log.i("Dino", "dino killed: " + dinosaurs.get(i).getDistanceRan());
             }
         }
 
         for (int i = survivers.size(); i < DINO_COUNT; i++) {
-            survivers.add(bestDino.reproduce(generation));
+            survivers.add(survivers.get(r.nextInt(survivers.size())).reproduce());
         }
 
         generation++;
+        currentDino = 0;
         maxScoreInGeneration = 0;
         minScoreInGeneration = Integer.MAX_VALUE;
         this.dinosaurs = survivers;

@@ -1,9 +1,6 @@
 package com.feresr.imdino;
 
-import android.util.Log;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by feresr on 23/10/2016.
@@ -21,14 +18,21 @@ public class Brain {
         neuronRows.add(neuronRow);
     }
 
+    int getNumberOfSynapses() {
+        int synapses = 0;
+        for (int i = 0; i < neuronRows.size(); i++) {
+            synapses += neuronRows.get(i).getNumberOfSynapses();
+        }
+
+        return synapses;
+    }
+
     float shouldJump(float[] inputs) {
         float[] result = inputs;
 
-        for (int i = 0; i < neuronRows.size(); i ++) {
+        for (int i = 0; i < neuronRows.size(); i++) {
             result = neuronRows.get(i).process(result);
         }
-
-        Log.e("Brain output", Arrays.toString(result));
         return result[0];
     }
 }

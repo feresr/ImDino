@@ -22,4 +22,8 @@ public class NeuronRow {
 
         return result;
     }
+
+    public int getNumberOfSynapses() {
+        return neurons.get(0).getNumberOfSynapses() * neurons.size();
+    }
 }
