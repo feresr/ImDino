@@ -532,10 +532,10 @@ Runner.prototype = {
         this.horizon.update(deltaTime, this.currentSpeed, hasObstacles);
       }
 
-      if (this.horizon.obstacles[0]) {
-        Android.onGameUpdate(this.horizon.obstacles[0].xPos, this.currentSpeed);
+      if (hasObstacles) {
+        Android.onGameUpdate(this.horizon.obstacles[0].xPos/HorizonLine.dimensions.WIDTH, this.currentSpeed/this.config.MAX_SPEED);
       } else {
-        Android.onGameUpdate(400, this.currentSpeed);
+        Android.onGameUpdate(1.0, this.currentSpeed/this.config.MAX_SPEED);
       }
 
       // Check for collisions.

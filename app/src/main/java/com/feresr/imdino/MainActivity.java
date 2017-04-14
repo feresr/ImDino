@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView speedTextView;
     private TextView distanceTextView;
     private TextView resultTextView;
+    private TextView generationTextView;
     private WebView webView;
     private KeyEvent keyEvent;
     private int maxScoreInGeneration = 0;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         speedTextView = (TextView) findViewById(R.id.speed);
         distanceTextView = (TextView) findViewById(R.id.distance);
         resultTextView = (TextView) findViewById(R.id.result);
+        generationTextView = (TextView) findViewById(R.id.generation);
 
         keyEvent = new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SPACE);
 
@@ -86,14 +88,14 @@ public class MainActivity extends AppCompatActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
-
-                for (int i = 0; i < dinoPlaceholderView.getChildCount(); i++) {
-                    dinoPlaceholderView.getChildAt(i).setAlpha(.2f);
+                if (currentDino == 0) {
+                    dinoPlaceholderView.getChildAt(DINO_COUNT - 1).setAlpha(0.25f);
+                } else {
+                    dinoPlaceholderView.getChildAt(currentDino - 1).setAlpha(0.25f);
                 }
-                dinoPlaceholderView.getChildAt(currentDino).setAlpha(1);
-                /*generationTextView.setText(String.valueOf(generation));
-                dinoTextView.setText(String.valueOf(currentDino));
-                genomeTextView.setText(Arrays.toString(dinosaurs.get(currentDino).getGenome()));*/
+
+                dinoPlaceholderView.getChildAt(currentDino).setAlpha(1.0f);
+                generationTextView.setText("Generation: " + String.valueOf(generation));
             }
         });
     }
