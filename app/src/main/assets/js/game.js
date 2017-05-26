@@ -1731,6 +1731,7 @@ Trex.prototype = {
       // Tweak the jump velocity based on the speed.
       this.jumpVelocity = this.config.INIITAL_JUMP_VELOCITY - (speed / 10);
       this.jumping = true;
+      Android.onJump();
       this.reachedMinHeight = false;
       this.speedDrop = false;
     }

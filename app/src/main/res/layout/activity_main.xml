@@ -8,6 +8,11 @@
     android:orientation="vertical"
     tools:context="com.feresr.imdino.MainActivity">
 
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +21,7 @@
 
 
         <TextView
-            android:id="@+id/generation"
+            android:id="@+id/generationTxtView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Generation: 0"
@@ -50,7 +55,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/speed"
+                    android:id="@+id/speedTxtView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -61,7 +66,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/distance"
+                    android:id="@+id/distanceTxtView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -79,16 +84,11 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/result"
+                    android:id="@+id/resultTxtView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
-    <WebView
-        android:id="@+id/webview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 </LinearLayout>
