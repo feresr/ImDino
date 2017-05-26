@@ -8,9 +8,7 @@ import java.util.*
 
 class Dino {
     var thinkValue = 0.0f
-
     var genome: FloatArray = FloatArray(6)
-
     var distanceRan = 0
 
     private val brain: Brain = Brain()
@@ -22,7 +20,6 @@ class Dino {
 
     internal constructor() : super() {
         val random = Random()
-
         for (i in genome.indices) {
             genome[i] = getRandomSynapses(random)
         }
@@ -56,8 +53,10 @@ class Dino {
         if (random.nextFloat() > .50) {
             for (i in genome.indices) {
                 if (random.nextFloat() < .8) {
+                    //father like mutation
                     childGenome[i] = (genome[i] + random.nextGaussian()).toFloat()
                 } else {
+                    //completely random mutation
                     childGenome[i] = random.nextFloat()
                 }
             }

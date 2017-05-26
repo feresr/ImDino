@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     private var currentDino = 0
     private var bestDino: Dino? = null
     private var jumps:Int = 0
-    private val JUMP_PENALTY:Int = 30;
+    private val JUMP_PENALTY:Int = 100
     private var dinosaurs: ArrayList<Dino> = ArrayList()
 
     @SuppressLint("SetJavaScriptEnabled", "JavascriptInterface", "AddJavascriptInterface")
