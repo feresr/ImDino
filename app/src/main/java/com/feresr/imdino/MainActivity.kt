@@ -52,7 +52,9 @@ class MainActivity : AppCompatActivity() {
         handler.post {
             speedTxtView.text = currentSpeed.toString()
             distanceTxtView.text = obstacleX.toString()
-            resultTxtView.text = dinosaurs[currentDino].thinkValue.toString()
+            if (currentDino > 0 && currentDino < dinosaurs.size) {
+                resultTxtView.text = dinosaurs[currentDino].thinkValue.toString()
+            }
         }
     }
 
